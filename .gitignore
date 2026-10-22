@@ -1,0 +1,15 @@
+# Dependencies and framework output
+node_modules/
+.next/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+
+# Logs and OS files
+*.log
+.DS_Store
+
+# Packaged archives
+*.zip

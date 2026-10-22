@@ -1,0 +1,20 @@
+# Runs the bot and (optionally) a Cloudflare Tunnel together.
+#   docker compose up -d                      # bot only
+#   docker compose --profile tunnel up -d     # bot + tunnel
+services:
+  bot:
+    build: .
+    container_name: helix-bot
+    restart: unless-stopped
+    env_file: .env
+
+  # Permanent HTTPS URL for the stats API. Create the tunnel once (see README),
+  # then put its token in CLOUDFLARE_TUNNEL_TOKEN in .env and route it to http://bot:3001
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: helix-tunnel
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run --token ${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - bot
+    profiles: ["tunnel"]
